@@ -17,7 +17,7 @@
 // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 //
 
-#include "dcdc-nuc.h"
+#include "dcdc_nuc.h"
 
 Dcdc_Nuc::Dcdc_Nuc() {
   connect_();
