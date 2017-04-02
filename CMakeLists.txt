@@ -43,10 +43,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#  FILES
-#  dcdc_nuc.msg
-#)
+add_message_files(
+  FILES
+  dcdc_nuc.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -98,22 +98,24 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
+   INCLUDE_DIRS include
 #  LIBRARIES ros-dcdc-nuc
-#  CATKIN_DEPENDS roscpp std_msgs
-#  DEPENDS system_lib
+   CATKIN_DEPENDS roscpp std_msgs
+#   DEPENDS libusb
 )
 
 ###########
 ## Build ##
 ###########
 
+include_directories(include ${catkin_INCLUDE_DIRS})
+
+add_executable(dcdc_nuc_node src/dcdc_nuc.c)
+add_dependencies(dcdc_nuc_node dcdc_nuc_generate_messages_cpp)
+target_link_libraries(dcdc_nuc_node ${catkin_LIBRARIES} usb)
+
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
-include_directories(
-  ${catkin_INCLUDE_DIRS}
-)
 
 ## Declare a C++ library
 # add_library(ros-dcdc-nuc
@@ -126,7 +128,6 @@ include_directories(
 # add_dependencies(ros-dcdc-nuc ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-# add_executable(ros-dcdc-nuc_node src/ros-dcdc-nuc_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
