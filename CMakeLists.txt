@@ -6,6 +6,7 @@ project(dcdc_nuc)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  message_generation
   std_msgs
 )
 
