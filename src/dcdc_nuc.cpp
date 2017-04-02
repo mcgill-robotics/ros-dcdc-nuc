@@ -165,6 +165,8 @@ struct Dcdc_Nuc_Data Dcdc_Nuc::get_data() {
   data.ignition_falled = output_flag & 0x0080;
   data.output_enabled = output_flag & 0x0100;
   data.thump_ouput_enabled = output_flag & 0x0200;
+  data.control_frequency = output_flag & 0x0400;
+  data.not_power_switch = output_flag & 0x0800;
 
   data.input_voltage = chars_to_uint_(buf[0][5], buf[0][6]) / 1000.0;
   data.input_current = chars_to_uint_(buf[0][7], buf[0][8]) / 1000.0;
@@ -235,6 +237,8 @@ int main(int argc, char **argv) {
     printf("IgnFalled: %s\n", data.ignition_falled ? "true" : "false");
     printf("OutEnabled: %s\n", data.output_enabled ? "true" : "false");
     printf("ThumpEnabled: %s\n", data.thump_ouput_enabled ? "true" : "false");
+    printf("ControlFrequency: %s\n", data.control_frequency ? "true" : "false");
+    printf("nPSW: %s\n", data.not_power_switch ? "true" : "false");
 
     printf("InputVoltage: %.2f\n", data.input_voltage);
     printf("InputCurrent: %.2f\n", data.input_current);
