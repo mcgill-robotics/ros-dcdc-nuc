@@ -177,7 +177,4 @@ class Dcdc_Nuc{
   double therm_to_temp_(unsigned int termistor_value);
 };
 
-// Main function to get all data in a loop.
-int main(int argc, char **argv);
-
 #endif  // DCDC_NUC_H_
