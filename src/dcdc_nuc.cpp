@@ -128,7 +128,7 @@ struct Dcdc_Nuc_Data Dcdc_Nuc::get_data() {
   // Getting IO data from the PSU
   for (int x = 0; x < 2; x++) {
     if (send_(&cmd_out[x]) < 0) {
-      throw std::runtime_error("get_io_date: send get data command failed!\n");
+      throw std::runtime_error("get_io_data: send get data command failed!\n");
     }
     ret = recv_(buf[x], MAX_TRANSFER_SIZE);
     if (ret < 0) {
@@ -164,7 +164,7 @@ struct Dcdc_Nuc_Data Dcdc_Nuc::get_data() {
   data.ignition_raised = output_flag & 0x0040;
   data.ignition_falled = output_flag & 0x0080;
   data.output_enabled = output_flag & 0x0100;
-  data.thump_ouput_enabled = output_flag & 0x0200;
+  data.thump_output_enabled = output_flag & 0x0200;
   data.control_frequency = output_flag & 0x0400;
   data.not_power_switch = output_flag & 0x0800;
 

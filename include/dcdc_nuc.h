@@ -105,7 +105,7 @@ struct Dcdc_Nuc_Data {
   bool ignition_raised;
   bool ignition_falled;
   bool output_enabled;
-  bool thump_ouput_enabled;
+  bool thump_output_enabled;
 
   double input_voltage;
   double input_current;
