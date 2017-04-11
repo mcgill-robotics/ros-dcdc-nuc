@@ -1,0 +1,4 @@
+<launch>
+    <node name="dcdc_nuc" pkg="dcdc_nuc" type="dcdc_nuc_node" 
+        respawn_delay="5" respawn="true" output="screen" />
+</launch>
