@@ -111,7 +111,6 @@ catkin_package(
 include_directories(include ${catkin_INCLUDE_DIRS})
 
 add_executable(dcdc_nuc_node src/dcdc_nuc_node.cpp src/dcdc_nuc.cpp)
-add_dependencies(dcdc_nuc_node dcdc_nuc_generate_messages_cpp)
 target_link_libraries(dcdc_nuc_node ${catkin_LIBRARIES} usb)
 
 ## Specify additional locations of header files
