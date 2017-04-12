@@ -68,14 +68,14 @@ void update_status(diagnostic_updater::DiagnosticStatusWrapper & stat) {
   if (dcdc_data.timer_ignition_to_output_on) {
     stat.add("Timer Output On", dcdc_data.timer_ignition_to_output_on);
     stat.mergeSummary(diagnostic_msgs::DiagnosticStatus::WARN,
-        "Turning on output soon.");
+        "Turning on output soon");
   }
 
   if (dcdc_data.timer_output_on_to_mobo_on_pulse) {
     stat.add("Timer Mobo On Pulse",
         dcdc_data.timer_output_on_to_mobo_on_pulse);
     stat.mergeSummary(diagnostic_msgs::DiagnosticStatus::WARN,
-        "Sending motherboard on signal soon.");
+        "Sending motherboard on signal soon");
   }
 
   if (dcdc_data.timer_ignition_cancel) {
@@ -86,22 +86,22 @@ void update_status(diagnostic_updater::DiagnosticStatusWrapper & stat) {
     stat.add("Timer Mobo On Pulse",
         dcdc_data.timer_ignition_off_to_mobo_off_pulse);
     stat.mergeSummary(diagnostic_msgs::DiagnosticStatus::WARN,
-        "Sending motherboard off signal soon.");
+        "Sending motherboard off signal soon");
   }
 
   if (dcdc_data.timer_hard_off) {
     unsigned int hard_off = dcdc_data.timer_hard_off;
     stat.add("Timer Hard Off", hard_off);
 
-    if (hard_off > 20) {
+    if (hard_off > 15) {
       stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::OK,
-          "Hard off soon in %d seconds", hard_off);
-    } else if (hard_off > 10) {
+          "Hard off in %d seconds", hard_off);
+    } else if (hard_off > 5) {
       stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::WARN,
-          "Hard off soon in %d seconds", hard_off);
+          "Hard off in %d seconds", hard_off);
     } else {
       stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::ERROR,
-          "Hard off soon in %d seconds", hard_off);
+          "Hard off in %d second%s", hard_off, hard_off == 1 ? "" : "s");
     }
   }
 
@@ -150,13 +150,13 @@ int main(int argc, char **argv) {
 
   dcdc_data = dcdc_nuc->get_data();
 
-  ROS_INFO("DCDC NUC PSU found in %s mode.", dcdc_data.mode ?
+  ROS_INFO("DCDC NUC PSU found in %s mode", dcdc_data.mode ?
       "Automotive" : "Dumb");
 
-  ROS_INFO("Firmware Verion %d.%d!", dcdc_data.firmware_version_major,
+  ROS_INFO("Firmware Verion %d.%d", dcdc_data.firmware_version_major,
       dcdc_data.firmware_version_minor);
 
-  ROS_INFO("Starting DCDC NUC PSU node...");
+  ROS_INFO("Starting DCDC NUC PSU node");
 
   while (ros::ok()) {
     dcdc_data = dcdc_nuc->get_data();
@@ -188,27 +188,28 @@ int main(int argc, char **argv) {
     thump_pub.publish(msg);
 
     if (dcdc_data.timer_ignition_cancel == 0) {
-      ROS_INFO_ONCE("Ignition Cancel timer reached.");
+      ROS_INFO_ONCE("Ignition Cancel timer reached");
       ROS_INFO_ONCE("Auto-shutdown enabled");
     }
 
     if (!dcdc_data.ignition_voltage_good && dcdc_data.output_enabled) {
-      ROS_INFO_THROTTLE(60, "Ignition voltage low. Shutdown Soon!");
+      ROS_INFO_THROTTLE(60, "Ignition voltage low, shutdown Soon");
     }
 
     unsigned int mobo_off = dcdc_data.timer_ignition_off_to_mobo_off_pulse;
     if (mobo_off > 0) {
-      ROS_WARN_THROTTLE(1, "Sending motherboard off signal in %d second%s!",
-          mobo_off, mobo_off == 1 ? "s" : "");
+      ROS_WARN_THROTTLE(1, "Sending motherboard off signal in %d second%s",
+          mobo_off, mobo_off == 1 ? "" : "s");
     }
 
     unsigned int hard_off = dcdc_data.timer_hard_off;
-    if (hard_off > 20) {
+    if (hard_off > 15) {
       ROS_INFO_THROTTLE(1, "Hard shutdown in %d seconds", hard_off);
-    } else if (hard_off > 10) {
+    } else if (hard_off > 5) {
       ROS_WARN_THROTTLE(1, "Hard shutdown in %d seconds", hard_off);
     } else if (hard_off != 0) {
-      ROS_FATAL_THROTTLE(1, "Hard shutdown in %d seconds", hard_off);
+      ROS_ERROR_THROTTLE(1, "Hard shutdown in %d second%s", hard_off,
+              hard_off == 1 ? "" : "s");
     }
 
     updater.update();
