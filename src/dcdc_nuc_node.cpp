@@ -112,7 +112,7 @@ void update_status(diagnostic_updater::DiagnosticStatusWrapper & stat) {
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "dcdc_psu");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
 
   dcdc_nuc = new Dcdc_Nuc();
 
@@ -160,7 +160,7 @@ int main(int argc, char **argv) {
 
   while (ros::ok()) {
     dcdc_data = dcdc_nuc->get_data();
-    
+
     std_msgs::Float64 msg;
 
     msg.data = dcdc_data.input_voltage;
