@@ -28,9 +28,9 @@ To run the script, change directory into compsys repository and run:
 ./drivers/dcdc-nuc/install
 ```
 
-## Dependancies
+## Dependencies
 
-This package require `libusb-dev` to build. You can get it by running on:
+This package requires `libusb-dev` to build. You can get it by running on:
 
 ```bash
 sudo apt-get install libusb-dev
