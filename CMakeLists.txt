@@ -5,10 +5,10 @@ project(dcdc_nuc)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  message_generation
+  message_runtime
   roscpp
   std_msgs
-  message_runtime
-  message_generation
 )
 
 ## System dependencies are found with CMake's conventions
@@ -101,9 +101,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
    INCLUDE_DIRS include
-#  LIBRARIES ros-dcdc-nuc
-   CATKIN_DEPENDS roscpp std_msgs message_runtime message_generation
-#  DEPENDS libusb
+   CATKIN_DEPENDS message_generation message_runtime roscpp std_msgs
 )
 
 ###########
@@ -112,8 +110,8 @@ catkin_package(
 
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-add_executable(dcdc_nuc_node src/dcdc_nuc_node.cpp src/dcdc_nuc.cpp)
-target_link_libraries(dcdc_nuc_node ${catkin_LIBRARIES} usb)
+add_executable(${PROJECT_NAME}_node src/${PROJECT_NAME}.cpp src/${PROJECT_NAME}_node.cpp)
+target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES} usb)
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
@@ -154,7 +152,7 @@ target_link_libraries(dcdc_nuc_node ${catkin_LIBRARIES} usb)
 # )
 
 ## Mark executables and/or libraries for installation
-install(TARGETS dcdc_nuc_node
+install(TARGETS ${PROJECT_NAME}_node
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
