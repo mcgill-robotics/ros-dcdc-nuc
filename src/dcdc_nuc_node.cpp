@@ -18,37 +18,56 @@
 //
 
 #include "dcdc_nuc.h"
-#include <ros/ros.h>
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
-#include <std_msgs/Float64.h>
+#include <ros/ros.h>
 #include <std_msgs/Bool.h>
+#include <std_msgs/Float64.h>
 #include <std_msgs/String.h>
 #include <string>
 
-
-Dcdc_Nuc * dcdc_nuc;
+Dcdc_Nuc *dcdc_nuc;
 Dcdc_Nuc_Data dcdc_data;
 
-void update_status(diagnostic_updater::DiagnosticStatusWrapper & stat) {
+void update_status(diagnostic_updater::DiagnosticStatusWrapper &stat) {
   std::string state;
   switch (dcdc_data.state_machine_state) {
-      case 1: state = "Low Power"; break;
-      case 2: state = "Off"; break;
-      case 3: state = "Wait ignition to output on"; break;
-      case 4: state = "Ouput on"; break;
-      case 5: state = "Output on to motherboard pulse"; break;
-      case 6: state = "Motherboard pulse on"; break;
-      case 7: state = "Normal"; break;
-      case 8: state = "Ignition off to motherboard pulse"; break;
-      case 9: state = "Hard off delay"; break;
-      default: state = "Unknown"; break;
+    case 1:
+      state = "Low Power";
+      break;
+    case 2:
+      state = "Off";
+      break;
+    case 3:
+      state = "Wait ignition to output on";
+      break;
+    case 4:
+      state = "Ouput on";
+      break;
+    case 5:
+      state = "Output on to motherboard pulse";
+      break;
+    case 6:
+      state = "Motherboard pulse on";
+      break;
+    case 7:
+      state = "Normal";
+      break;
+    case 8:
+      state = "Ignition off to motherboard pulse";
+      break;
+    case 9:
+      state = "Hard off delay";
+      break;
+    default:
+      state = "Unknown";
+      break;
   }
 
   if (dcdc_data.state_machine_state == 7) {
-      stat.summary(diagnostic_msgs::DiagnosticStatus::OK, state);
+    stat.summary(diagnostic_msgs::DiagnosticStatus::OK, state);
   } else {
-      stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, state);
+    stat.summary(diagnostic_msgs::DiagnosticStatus::WARN, state);
   }
   stat.add("State", state);
 
@@ -62,20 +81,19 @@ void update_status(diagnostic_updater::DiagnosticStatusWrapper & stat) {
   stat.add("Thump Ouput Enbaled", dcdc_data.thump_output_enabled);
 
   if (dcdc_data.timer_init) {
-      stat.add("Timer Init", dcdc_data.timer_init);
+    stat.add("Timer Init", dcdc_data.timer_init);
   }
 
   if (dcdc_data.timer_ignition_to_output_on) {
     stat.add("Timer Output On", dcdc_data.timer_ignition_to_output_on);
     stat.mergeSummary(diagnostic_msgs::DiagnosticStatus::WARN,
-        "Turning on output soon");
+                      "Turning on output soon");
   }
 
   if (dcdc_data.timer_output_on_to_mobo_on_pulse) {
-    stat.add("Timer Mobo On Pulse",
-        dcdc_data.timer_output_on_to_mobo_on_pulse);
+    stat.add("Timer Mobo On Pulse", dcdc_data.timer_output_on_to_mobo_on_pulse);
     stat.mergeSummary(diagnostic_msgs::DiagnosticStatus::WARN,
-        "Sending motherboard on signal soon");
+                      "Sending motherboard on signal soon");
   }
 
   if (dcdc_data.timer_ignition_cancel) {
@@ -84,9 +102,9 @@ void update_status(diagnostic_updater::DiagnosticStatusWrapper & stat) {
 
   if (dcdc_data.timer_ignition_off_to_mobo_off_pulse) {
     stat.add("Timer Mobo On Pulse",
-        dcdc_data.timer_ignition_off_to_mobo_off_pulse);
+             dcdc_data.timer_ignition_off_to_mobo_off_pulse);
     stat.mergeSummary(diagnostic_msgs::DiagnosticStatus::WARN,
-        "Sending motherboard off signal soon");
+                      "Sending motherboard off signal soon");
   }
 
   if (dcdc_data.timer_hard_off) {
@@ -95,20 +113,20 @@ void update_status(diagnostic_updater::DiagnosticStatusWrapper & stat) {
 
     if (hard_off > 15) {
       stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::OK,
-          "Hard off in %d seconds", hard_off);
+                         "Hard off in %d seconds", hard_off);
     } else if (hard_off > 5) {
       stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::WARN,
-          "Hard off in %d seconds", hard_off);
+                         "Hard off in %d seconds", hard_off);
     } else {
       stat.mergeSummaryf(diagnostic_msgs::DiagnosticStatus::ERROR,
-          "Hard off in %d second%s", hard_off, hard_off == 1 ? "" : "s");
+                         "Hard off in %d second%s", hard_off,
+                         hard_off == 1 ? "" : "s");
     }
   }
 
   stat.addf("Firmware Version", "%d.%d", dcdc_data.firmware_version_major,
-      dcdc_data.firmware_version_minor);
+            dcdc_data.firmware_version_minor);
 }
-
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "dcdc_psu");
@@ -124,11 +142,9 @@ int main(int argc, char **argv) {
   updater.setHardwareID(hardware_id);
   updater.add("Status updater", update_status);
 
-  ros::Publisher v_in_pub =
-      nh.advertise<std_msgs::Float64>("input_voltage", 1);
+  ros::Publisher v_in_pub = nh.advertise<std_msgs::Float64>("input_voltage", 1);
 
-  ros::Publisher i_in_pub =
-      nh.advertise<std_msgs::Float64>("input_current", 1);
+  ros::Publisher i_in_pub = nh.advertise<std_msgs::Float64>("input_current", 1);
 
   ros::Publisher v_out_pub =
       nh.advertise<std_msgs::Float64>("output_voltage", 1);
@@ -136,11 +152,9 @@ int main(int argc, char **argv) {
   ros::Publisher i_out_pub =
       nh.advertise<std_msgs::Float64>("output_current", 1);
 
-  ros::Publisher p_out_pub =
-      nh.advertise<std_msgs::Float64>("output_power", 1);
+  ros::Publisher p_out_pub = nh.advertise<std_msgs::Float64>("output_power", 1);
 
-  ros::Publisher temp_pub =
-      nh.advertise<std_msgs::Float64>("temperature", 1);
+  ros::Publisher temp_pub = nh.advertise<std_msgs::Float64>("temperature", 1);
 
   ros::Publisher v_ign_pub =
       nh.advertise<std_msgs::Float64>("ignition_voltage", 1);
@@ -150,11 +164,11 @@ int main(int argc, char **argv) {
 
   dcdc_data = dcdc_nuc->get_data();
 
-  ROS_INFO("DCDC NUC PSU found in %s mode", dcdc_data.mode ?
-      "Automotive" : "Dumb");
+  ROS_INFO("DCDC NUC PSU found in %s mode",
+           dcdc_data.mode ? "Automotive" : "Dumb");
 
   ROS_INFO("Firmware Verion %d.%d", dcdc_data.firmware_version_major,
-      dcdc_data.firmware_version_minor);
+           dcdc_data.firmware_version_minor);
 
   ROS_INFO("Starting DCDC NUC PSU node");
 
@@ -199,7 +213,7 @@ int main(int argc, char **argv) {
     unsigned int mobo_off = dcdc_data.timer_ignition_off_to_mobo_off_pulse;
     if (mobo_off > 0) {
       ROS_WARN_THROTTLE(1, "Sending motherboard off signal in %d second%s",
-          mobo_off, mobo_off == 1 ? "" : "s");
+                        mobo_off, mobo_off == 1 ? "" : "s");
     }
 
     unsigned int hard_off = dcdc_data.timer_hard_off;
@@ -209,7 +223,7 @@ int main(int argc, char **argv) {
       ROS_WARN_THROTTLE(1, "Hard shutdown in %d seconds", hard_off);
     } else if (hard_off != 0) {
       ROS_ERROR_THROTTLE(1, "Hard shutdown in %d second%s", hard_off,
-              hard_off == 1 ? "" : "s");
+                         hard_off == 1 ? "" : "s");
     }
 
     updater.update();

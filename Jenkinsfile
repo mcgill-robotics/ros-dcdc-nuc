@@ -49,7 +49,20 @@ pipeline {
         }
         stage('Format') {
           steps {
-            sh '[ -z "$(yapf --recursive --parallel --diff .)" ]'
+            sh '''
+              FILES="$(find ${PWD} \
+                -iname '*.h' -o \
+                -iname '*.c' -o \
+                -iname '*.cpp' -o \
+                -iname '*.hpp'
+              )"
+              CHANGES=""
+              for f in ${FILES}; do
+                CURR_CHANGES="$(clang-format ${f} | diff ${f} -)"
+                CHANGES="${CHANGES}${CURR_CHANGES}"
+              done
+              [ -z "${CHANGES}" ]
+            '''
           }
         }
       }

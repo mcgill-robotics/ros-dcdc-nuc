@@ -24,9 +24,7 @@ Dcdc_Nuc::Dcdc_Nuc() {
   setup_();
 }
 
-Dcdc_Nuc::~Dcdc_Nuc() {
-  usb_close(h_);
-}
+Dcdc_Nuc::~Dcdc_Nuc() { usb_close(h_); }
 
 void Dcdc_Nuc::connect_() {
   struct usb_bus *b;
@@ -40,7 +38,7 @@ void Dcdc_Nuc::connect_() {
   for (b = usb_get_busses(); b != NULL; b = b->next) {
     for (d = b->devices; d != NULL; d = d->next) {
       if ((d->descriptor.idVendor == NUC_VID) &&
-        (d->descriptor.idProduct == NUC_PID)) {
+          (d->descriptor.idProduct == NUC_PID)) {
         h_ = usb_open(d);
         break;
       }
@@ -181,8 +179,9 @@ struct Dcdc_Nuc_Data Dcdc_Nuc::get_data() {
 
   data.ignition_voltage = chars_to_uint_(buf[0][15], buf[0][16]) / 1000.0;
 
-  data.output_power = ((buf[0][17] << 24) | (buf[0][18] << 16)
-    | (buf[0][19] << 8) | buf[0][20]) / 1000.0;
+  data.output_power = ((buf[0][17] << 24) | (buf[0][18] << 16) |
+                       (buf[0][19] << 8) | buf[0][20]) /
+                      1000.0;
   data.thump_voltage = chars_to_uint_(buf[0][21], buf[0][22]) / 1000.0;
 
   // Parsing IO DATA 2
@@ -190,21 +189,19 @@ struct Dcdc_Nuc_Data Dcdc_Nuc::get_data() {
     throw std::runtime_error("get_data: command2 in ID mismatched!");
   }
 
-  data.timer_output_on_to_mobo_on_pulse = chars_to_uint_(buf[1][1],
-                                                         buf[1][2]) * 10;
+  data.timer_output_on_to_mobo_on_pulse =
+      chars_to_uint_(buf[1][1], buf[1][2]) * 10;
   data.timer_init = chars_to_uint_(buf[1][3], buf[1][4]) * 10;
   data.timer_ignition_to_output_on = chars_to_uint_(buf[1][5], buf[1][6]);
   data.timer_thump_output_on_off = chars_to_uint_(buf[1][7], buf[1][8]);
   data.timer_mobo_pulse_width = chars_to_uint_(buf[1][9], buf[1][10]) * 10;
-  data.timer_ignition_off_to_mobo_off_pulse = chars_to_uint_(buf[1][11],
-                                                             buf[1][12]);
+  data.timer_ignition_off_to_mobo_off_pulse =
+      chars_to_uint_(buf[1][11], buf[1][12]);
   data.timer_hard_off = chars_to_uint_(buf[1][13], buf[1][14]);
-  data.timer_ignition_cancel = chars_to_uint_(buf[1][15],
-                                              buf[1][16]);
-  data.timer_input_voltage_count = chars_to_uint_(buf[1][17],
-                                                  buf[1][18]) * 10;
-  data.timer_ignition_voltage_count = chars_to_uint_(buf[1][19],
-                                                     buf[1][20]) * 10;
+  data.timer_ignition_cancel = chars_to_uint_(buf[1][15], buf[1][16]);
+  data.timer_input_voltage_count = chars_to_uint_(buf[1][17], buf[1][18]) * 10;
+  data.timer_ignition_voltage_count =
+      chars_to_uint_(buf[1][19], buf[1][20]) * 10;
 
   data.state_machine_state = buf[1][21];
   data.mode = buf[1][22];
