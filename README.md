@@ -2,7 +2,7 @@
 
 This is a driver for the Mini-Box DCDC NUC computer power suppy.
 
-The point of this application is to have status information of the power 
+The point of this application is to have status information of the power
 supply in ROS.
 
 ## Setting up
@@ -12,21 +12,12 @@ You must clone this repository as `dcdc-nuc` into your catkin workspace:
 git clone https://github.com/mcgill-robotics/ros-dcdc-nuc dcdc_nuc
 ```
 
-You will need to patch your HID kernel driver to be able to communicate with 
-the power supply. The McGill Robotics `compsys` repository contains the script
-to patch the kernel.
+You will need to update the firmware for the DCDC NUC to be able to communicate
+with linux. Earlier version of the firmware has a bug that cause it to fail to
+emulate under linux.
 
-If you do not have the `compsys` repository cloned, you can do so by running:
-
-```bash
-git clone https://github.com/mcgill-robotics/compsys.git
-```
-
-To run the script, change directory into compsys repository and run:
-
-```bash
-./drivers/dcdc-nuc/install
-```
+Refer to the [DCDC NUC wiki page](http://wiki.mini-box.com/index.php?title=DCDC-NUC#Bootloader_Mode)
+for more detail.
 
 ## Dependencies
 
