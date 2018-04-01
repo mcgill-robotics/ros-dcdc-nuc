@@ -16,7 +16,7 @@ You will need to update the firmware for the DCDC NUC to be able to communicate
 with linux. Earlier version of the firmware has a bug that cause it to fail to
 emulate under linux.
 
-Refer to the (DCDC NUC wiki page)[http://wiki.mini-box.com/index.php?title=DCDC-NUC#Bootloader_Mode]
+Refer to the [DCDC NUC wiki page](http://wiki.mini-box.com/index.php?title=DCDC-NUC#Bootloader_Mode)
 for more detail.
 
 ## Dependencies
