@@ -1,5 +1,9 @@
 # ROS DCDC NUC driver
 
+[status]: https://dev.mcgillrobotics.com/buildStatus/icon?job=ros-dcdc-nuc/master
+[url]: https://dev.mcgillrobotics.com/job/ros-dcdc-nuc/job/master
+[![status]][url]
+
 This is a driver for the Mini-Box DCDC NUC computer power suppy.
 
 The point of this application is to have status information of the power
