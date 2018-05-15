@@ -129,7 +129,7 @@ void update_status(diagnostic_updater::DiagnosticStatusWrapper &stat) {
 }
 
 int main(int argc, char **argv) {
-  ros::init(argc, argv, "dcdc_psu");
+  ros::init(argc, argv, "dcdc_nuc");
   ros::NodeHandle nh("~");
 
   dcdc_nuc = new Dcdc_Nuc();
@@ -138,7 +138,7 @@ int main(int argc, char **argv) {
 
   diagnostic_updater::Updater updater;
   std::string hardware_id;
-  nh.param<std::string>("hardware_id", hardware_id, "dcdc_psu");
+  nh.param<std::string>("hardware_id", hardware_id, "dcdc_nuc");
   updater.setHardwareID(hardware_id);
   updater.add("Status updater", update_status);
 
