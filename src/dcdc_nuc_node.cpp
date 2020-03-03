@@ -18,6 +18,7 @@
 //
 
 #include "dcdc_nuc.h"
+
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
 #include <ros/ros.h>
